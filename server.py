@@ -83,7 +83,7 @@ def get_recent_orders():
 @app.route('/insertOrder', methods=['POST'])
 def insert_order():
     request_payload = json.loads(request.form['data'])
-    print("Data:::::", request_payload)
+    print("\n\nData -----------------:", request_payload, "\n\n")
     order_id = orders_dao.insert_order(connection, request_payload)
 
     response = jsonify({
