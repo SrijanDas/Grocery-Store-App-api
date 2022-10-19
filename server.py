@@ -1,18 +1,15 @@
-import corsheaders.middleware
 from flask import Flask, request, jsonify
-from sql_connection import get_sql_connection
-import mysql.connector
+from conf.sql_connection import get_sql_connection
 import json
 
-import products_dao
-import orders_dao
-import uom_dao
+from controllers import products as products_dao, orders as orders_dao, uom as uom_dao
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
 connection = get_sql_connection()
+
 
 # Getting the Unit of Measuremnt
 @app.route('/', methods=['GET'])
@@ -29,6 +26,7 @@ def get_uom():
     response = jsonify(response)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+
 
 # -------------------Products---------------
 
@@ -63,6 +61,7 @@ def delete_product():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+
 # ----------------- Orders --------------------
 
 
@@ -73,12 +72,14 @@ def get_all_orders():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+
 @app.route('/recentOrders', methods=['GET'])
 def get_recent_orders():
     response = orders_dao.get_recent_orders(connection)
     response = jsonify(response)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+
 
 @app.route('/insertOrder', methods=['POST'])
 def insert_order():
@@ -93,7 +94,7 @@ def insert_order():
     return response
 
 
-@app.route('/order', methods=['POST'])
+@app.route('/order', methods=['GET'])
 def get_order():
     request_payload = json.loads(request.data)
     order_id = request_payload["id"]
